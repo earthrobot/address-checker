@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Address;
 use Illuminate\Http\Request;
-use MoveMoveIo\DaData\Enums\Language;
-use MoveMoveIo\DaData\Facades\DaDataAddress;
 
 class AddressController extends Controller
 {
@@ -16,8 +14,8 @@ class AddressController extends Controller
      */
     public function index()
     {
-        $addresses = Address::all();
-        return response()->view('addresses.index', compact('addresses'));
+        $addresses_by_regions = Address::all()->groupBy('region_with_type');
+        return response()->view('addresses.index', compact('addresses_by_regions'));
     }
 
     /**
@@ -28,44 +26,37 @@ class AddressController extends Controller
      */
     public function store(Request $request)
     {
+        
         $data = $this->validate($request, [
-            "address" => "required"
+            "full_address" => 'required',
+            "federal_district" => 'max:255',
+            "region_with_type" => 'max:255',
+            "area_with_type" => 'max:255',
+            "city_with_type" => 'max:255',
+            "city_district_with_type" => 'max:255',
+            "settlement_with_type" => 'max:255',
+            "street_with_type" => 'max:255',
+            "house_type_full" => 'max:255',
+            "house" => 'max:255'
         ]);
     
         try {
 
-            $result = DaDataAddress::standardization($data["address"])[0];
-
-            if ($result["city_with_type"] != null) {
-                if (Address::firstWhere("city_with_type", $result["city_with_type"]) != null){
-                    flash("В базе имеются адреса в вашем городе")->info();
-                }
-            } elseif ($result["settlement_with_type"] != null) {
-                if (Address::firstWhere("settlement_with_type", $result["settlement_with_type"]) != null){
-                    flash("В базе имеются адреса в вашем поселении")->info();
-                }
+            if (Address::whereNotNull("city_with_type")->firstWhere("city_with_type", $data["city_with_type"]) != null
+             || Address::whereNotNull("settlement_with_type")->firstWhere("settlement_with_type", $data["settlement_with_type"]) != null){
+                flash("В базе имеются адреса в вашем населенном пункте")->info();
             }
 
-            if (Address::firstWhere("full_address", $result["result"]) == null) {
+            if (!Address::where("full_address", $data["full_address"])->exists()) {
                 $address = new Address();
-                $address->fill([
-                    "full_address" => $result["result"],
-                    "federal_district" => $result["federal_district"],
-                    "region_with_type" => $result["region_with_type"],
-                    "area_with_type" => $result["area_with_type"],
-                    "city_with_type" => $result["city_with_type"],
-                    "city_district_with_type" => $result["city_district_with_type"],
-                    "settlement_with_type" => $result["settlement_with_type"],
-                    "street_with_type" => $result["street_with_type"],
-                    "house_type_full" => $result["house_type_full"],
-                    "house" => $result["house"]
-                ]);
-        
+                $address->fill($data);
                 $address->save();
             }
 
         } catch (\Exception $e) {
+
             flash($e->getMessage(), 'danger');
+            
         }
      
         return redirect()->route('home');

@@ -16,8 +16,8 @@ class CreateAddressesTable extends Migration
         Schema::create('addresses', function (Blueprint $table) {
             $table->id();
             $table->text('full_address');
-            $table->string('federal_district');
-            $table->string('region_with_type');
+            $table->string('region_with_type')->nullable();
+            $table->string('federal_district')->nullable();
             $table->string('area_with_type')->nullable();
             $table->string('city_with_type')->nullable();
             $table->string('city_district_with_type')->nullable();

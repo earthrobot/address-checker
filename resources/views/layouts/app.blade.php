@@ -58,7 +58,16 @@
             token: "{{config('dadata.token')}}",
             type: "ADDRESS",
             onSelect: function(suggestion) {
-                console.log(suggestion);
+                $("#full_address").val(suggestion.value);
+                $("#federal_district").val(suggestion.data.federal_district);
+                $("#region_with_type").val(suggestion.data.region_with_type);
+                $("#area_with_type").val(suggestion.data.area_with_type);
+                $("#city_with_type").val(suggestion.data.city_with_type);
+                $("#city_district_with_type").val(suggestion.data.city_district_with_type);
+                $("#settlement_with_type").val(suggestion.data.settlement_with_type);
+                $("#street_with_type").val(suggestion.data.street_with_type);
+                $("#house_type_full").val(suggestion.data.house_type_full);
+                $("#house").val(suggestion.data.house);
             }
         });
     </script>
