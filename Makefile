@@ -6,4 +6,3 @@ setup:
 	cp -n .env.example .env|| true
 	php artisan key:gen --ansi
 	php artisan migrate
-	npm ci
