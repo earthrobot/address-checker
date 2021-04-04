@@ -9,7 +9,7 @@
                 <p class="lead">Введите адрес</p>
                 <form action="{{ route('addresses.store', false) }}" method="post" class="d-flex justify-content-center">
                     {{ csrf_field() }}
-                    <input type="text" name="address" class="form-control form-control-lg">
+                    <input id="address" name="address" type="text" class="form-control form-control-lg">
                     <button type="submit" class="btn btn-lg btn-primary ml-3 px-6">Проверить</button>
                 </form>
             </div>

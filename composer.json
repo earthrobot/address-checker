@@ -9,10 +9,10 @@
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.3",
-        "hflabs/dadata": "^20.12",
         "laracasts/flash": "^3.2",
         "laravel/framework": "^8.12",
-        "laravel/tinker": "^2.5"
+        "laravel/tinker": "^2.5",
+        "movemoveapp/laravel-dadata": "^1.0"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

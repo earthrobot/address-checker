@@ -4,9 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Address;
 use Illuminate\Http\Request;
-use Illuminate\Http\Client\RequestException;
-use Illuminate\Http\Client\ConnectionException;
-use Dadata\DadataClient;
+use MoveMoveIo\DaData\Enums\Language;
+use MoveMoveIo\DaData\Facades\DaDataAddress;
 
 class AddressController extends Controller
 {
@@ -34,10 +33,8 @@ class AddressController extends Controller
         ]);
     
         try {
-            $token = "fc1b9ae85298ff9ee8d5fbd17e4b11412745c7f4";
-            $secret = "a4085bbc2e368c75886f4b146955dbe396d5f27b";
-            $dadata = new DadataClient($token, $secret);
-            $result = $dadata->clean("address", $data["address"]);
+
+            $result = DaDataAddress::standardization($data["address"])[0];
 
             if ($result["city_with_type"] != null) {
                 if (Address::firstWhere("city_with_type", $result["city_with_type"]) != null){
@@ -48,7 +45,7 @@ class AddressController extends Controller
                     flash("В базе имеются адреса в вашем поселении")->info();
                 }
             }
-            
+
             if (Address::firstWhere("full_address", $result["result"]) == null) {
                 $address = new Address();
                 $address->fill([
@@ -67,7 +64,7 @@ class AddressController extends Controller
                 $address->save();
             }
 
-        } catch (RequestException | ConnectionException $e) {
+        } catch (\Exception $e) {
             flash($e->getMessage(), 'danger');
         }
      

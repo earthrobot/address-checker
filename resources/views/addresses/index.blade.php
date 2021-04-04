@@ -23,7 +23,7 @@
                     <td>{{ $address->city_with_type ?? $address->settlement_with_type}}</td>
                     <td>{{ $address->city_district_with_type }}</td>
                     <td>{{ $address->street_with_type }}</td>
-                    <td>{{ $address->house }}</td>
+                    <td>{{ $address->house_type_full }} {{ $address->house }}</td>
                     <td>{{ $address->full_address }}</td>
                 </tr>
             @empty
